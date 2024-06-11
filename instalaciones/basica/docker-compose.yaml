@@ -7,11 +7,11 @@ services:
     container_name:      mipg
     restart:             always
     environment:
-	  POSTGRES_USER:     usuario
-	  POSTGRES_PASSWORD: password
-	  POSTGRES_DB:       db
-	volumes:
-		               - /home/ubuntu/environment/datos/pg:/var/lib/postgresql/data
+        POSTGRES_USER:     usuario
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB:       db
+    volumes:
+        - /home/ubuntu/environment/datos/pg:/var/lib/postgresql/data
 
 
   adminer:
@@ -19,3 +19,7 @@ services:
     restart:            always
     ports:
                       - 8080:8080
+
+# docker compose up CREAR Y ARRANCAR TODO
+#                down PARA Y BORRA TODO
+                 
