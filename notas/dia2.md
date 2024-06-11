@@ -280,3 +280,93 @@ De kubernetes hay varias DISTRIBUCIONES:
     - Karbon (distro de Nutanix)
     
 ---
+
+docker TIPO_OBJETO VERBO <args>
+
+
+TIPO_OBJETO:
+    container       list rm create start stop restart logs
+    image           pull list rm 
+    
+    
+    -----------------------------------------------------------------------+- red de amazon
+    |                                                                      |
+    172.31.0.71:8888-> 172.17.0.2:80                                     menchuPC
+    |                                                                      |
+    IvanPC-172.17.0.1---------red docker---------+                      curl http://172.31.0.71:8888
+    |                                            |
+    127.0.0.1                                   172.17.0.2
+    |                                            |
+    red loopback                                minginx
+                                                nginx:80
+                                                
+                                                
+docker container inspect minginx
+
+Cuando trabajamos con contenedores BORRAMOS CONTENEDORES COMO SI NO HUBIERA MAÑANA... 
+cosa que no hago ni con máquinas físicas ni con MV
+
+Imaginad que monto un postgres 16.0... en un contenedor
+docker container create --mipg postgres:16.0.0
+
+Empiezo a cargar datos...
+
+Quiero pasar a postgres 16.3
+docker container rm mipg -f 
+docker container create --mipg postgres:16.3.0
+
+Quiero pasar a postgres 17.0
+docker container rm mipg -f 
+docker container create --mipg postgres:17.0
+
+Entonces... al trabajar con contenedores, 
+necesito asegurar la supervivencia de los datos tras el borrado del contenedor.
+
+Y ENTRA EL CONCEPTO DE VOLUMEN:
+Punto de montaje en el fs del contenedor que apunta a un almacenamiento externo al contenedor.
+
+Lo normal al trabajar con Docker es usar volumenes locales (los datos se guardan en el host)
+En la carpeta que me de la gana.. y que "comparto" (hago disponible) en el fs del 
+contenedor en un punto de montaje... el que quiera.
+
+Normalmente el fabricante me dice en que carpeta del fs del contenedor se guardan los datos... 
+de lo que sea que guarde los datos el contenedor.
+
+
+---
+postgresql
+
+    16.3.0      No la quiero... es la que piden
+                Pero si sale una 16.3.1... LA QUIERO... SE han arreglado bugs
+                Pero si sale una 16.3.2... LA QUIERO... SE han arreglado bugs
+    16.3        GUAY !
+    16          Me montaría la ultima 16..
+                que en un momento podría ser la 16.3 o la 16.7
+                Si me dicn que necesitan la 16.3.. y monto la 16.7
+                    Estoy instalando una version con funcionalidad que no es necesario
+                    y que potencialmente puede traer bugs
+                
+    latest      NUNCA JAMAS EN LA VIDA
+                El problema es que hoy puede apuntar a la v16.3...
+                y dentro de un mes a la v18
+
+La versión de la BBDD me suele venir como requisito... de desarrollo.
+
+# Versionado de software
+
+16.3.0
+            ¿Cuando cambian?
+            
+16  MAJOR   Breaking changes -> Cambios que rompen retrocompatibilidad.
+3   MINOR   Nueva funcionalidad
+            Funcionalidad marcada como obsoleta (deprecated)
+            + Opcionalmente pueden venir arreglos de bugs
+0   PATCH   Arreglos bugs
+
+
+docker container create --name mipg \
+	-e POSTGRES_USER=usuario \
+	-e POSTGRES_PASSWORD=password \
+	-e POSTGRES_DB=db \
+	-v /home/ubuntu/environment/datos/pg:/var/lib/postgresql/data \
+	postgres

@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+
+  db:
+    image:               postgres:16.3
+    container_name:      mipg
+    restart:             always
+    environment:
+	  POSTGRES_USER:     usuario
+	  POSTGRES_PASSWORD: password
+	  POSTGRES_DB:       db
+	volumes:
+		               - /home/ubuntu/environment/datos/pg:/var/lib/postgresql/data
+
+
+  adminer:
+    image:              adminer
+    restart:            always
+    ports:
+                      - 8080:8080
