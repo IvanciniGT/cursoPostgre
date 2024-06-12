@@ -137,12 +137,41 @@ Qué prima en un entorno de producción: HA... y eso come... y mucho.
 En entornos de producción tiramos de clusters. para las BBDD:
 
 - Standalone
-- Replicación
+- Replicación   HA
   - Maestro: Toda la carga de trabado en actualización, inserción, eliminación y consulta
   - Replica: Sin hacer ni la hueva... a la espera de si la otra se cae
-             Para consultas <<< BI
-- Cluster:
+             Para consultas <<< BI          Algo de ESCALABILIDAD
+- Cluster:      HA  ESCALABILIDAD
   Múltiples nodos compartiendo la carga de trabajo 
+
+    POSTGRESQL
+        Nodo1- Archivos de BBDD 1       <<< Insert
+            A B
+        Nodo2- Archivos de BBDD 2
+            A C
+        ----------
+        Nodo3- Archivos de BBDD 3
+            B C
+            
+    Insert dato A... qué rendimiento gano?
+        Al meter 3 máquinas... en 2 unidades de tiempo, he sido capaz de procesar cuántas peticiones? 3
+        Mejora de rendimiento del 50%
+        x3 máquinas -> mejora en capacidad de trabajo (carga máxima adminible) (teórica del 50%) - REAL: ~30%
+            Luego viene el tio paco con las rebaqjas...
+            Y los datos... y los nodos hay que comunicarlos / sincronizarlos.
+            Pero el rendimineto por operación disminuye
+
+Cuántas máquinas necesito para un cluster de una BBDD? 3 o más (impares)
+Impares???
+Esas 3 máquinas no hacen el mismo trabajo.
+Quién da el ID? El que recibe la petición? Uno de los nodos es el que encarga de dar los IDs
+Hay un nodo del cluster que se elige como MAESTRO
+Potencial problema: BRAIN SPLITTING
+La solución más sencilla es que el maestro sea elegido por Quorum (votació) .. y necesita más del 50% de los votos.
+
+Weblogic                \
+Servidor web Apache     / Puedo montar un cluster con 2? SI... aquñi no tienen que ser impares. EIN !?!?!?!
+Si hacen el mismo trabajo.. Cada uno el suyo... pero todos el mismo.
 
 ### Tolerancia a fallas catastróficas
 
