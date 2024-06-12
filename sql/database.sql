@@ -2,8 +2,8 @@
 CREATE TABLE Cursos (
     Id          SMALLSERIAL     NOT NULL    PRIMARY KEY,                -- 2
     Duración    SMALLINT        NOT NULL,                               -- 2
-    Importe     NUMERIC(7,2)    NOT NULL,                -- 99999,99     -- 12
-    Titulo      VARCHAR(100)    NOT NULL                               -- 100
+    Importe     NUMERIC(7,2)    NOT NULL,                -- 99999,99    -- 12
+    Titulo      VARCHAR(100)    NOT NULL                                -- 100
 );
 -- Empresas
 CREATE TABLE Empresas(
