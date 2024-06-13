@@ -71,7 +71,9 @@ En postgresql los que hacemos es crear varias tablas...
         ...
     } PARTITION BY HASH(id);
     
-    CREATE TABLE Inscripciones_Particion_1 PARTITION OF Inscripciones FOR VALUES WITH ( MODULUS 4, REMAINDER 0 );
+    CREATE TABLESPACE espacio1 LOCATION 'RUTA';
+    
+    CREATE TABLE Inscripciones_Particion_1 TABLESPACE espacio1 PARTITION OF Inscripciones FOR VALUES WITH ( MODULUS 4, REMAINDER 0 );
     CREATE TABLE Inscripciones_Particion_2 PARTITION OF Inscripciones FOR VALUES WITH ( MODULUS 4, REMAINDER 1 );
     CREATE TABLE Inscripciones_Particion_3 PARTITION OF Inscripciones FOR VALUES WITH ( MODULUS 4, REMAINDER 2 );
     CREATE TABLE Inscripciones_Particion_4 PARTITION OF Inscripciones FOR VALUES WITH ( MODULUS 4, REMAINDER 3 );

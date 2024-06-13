@@ -61,6 +61,7 @@ SELECT tableoid::regclass, * from personas2  order by id;
 
 -- Ambas tienen el mismo plan de ejecución
 EXPLAIN SELECT * from personas2;
+
 EXPLAIN (
     select * from personas_alta
     UNION ALL 
