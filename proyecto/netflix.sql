@@ -13,6 +13,8 @@ CREATE TABLESPACE datos LOCATION '/var/lib/postgresql/data/netflix_datos';
 -- 2 para los índices
 CREATE TABLESPACE indices LOCATION '/var/lib/postgresql/data/netflix_indices';
 
+DROP TABLE IF EXISTS visualizaciones_2024;
+DROP TABLE IF EXISTS visualizaciones_2025;
 
 DROP TABLE IF EXISTS visualizaciones;
 DROP TABLE IF EXISTS peliculas;
@@ -147,8 +149,6 @@ ALTER TABLE visualizaciones ADD CONSTRAINT visualizaciones_usuario_pelicula_fech
 ALTER TABLE visualizaciones ADD CONSTRAINT visualizaciones_usuario_fk                FOREIGN KEY (usuario)  REFERENCES usuarios (id);
 ALTER TABLE visualizaciones ADD CONSTRAINT visualizaciones_peliculas_fk              FOREIGN KEY (pelicula) REFERENCES peliculas (id);
 
-DROP TABLE IF EXISTS visualizaciones_2024;
-DROP TABLE IF EXISTS visualizaciones_2025;
 
 CREATE TABLE visualizaciones_2024 PARTITION OF visualizaciones
     FOR VALUES FROM ('2024-01-01') TO ('2025-01-01') TABLESPACE datos;
