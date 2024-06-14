@@ -5,18 +5,18 @@ from faker import Faker
 # Configuración de la conexión
 db_config = {
     'dbname': 'netflix',
-    'user': 'netflix',
-    'password': 'netflix',
+    'user': 'usuario',
+    'password': 'password',
     'host': 'localhost',
     'port': '5432'
 }
 
 # Constantes para el número de registros
-NUM_USERS = 10000
-NUM_DIRECTORS = 500
+NUM_USERS = 100000
+NUM_DIRECTORS = 5000
 NUM_TEMATICS = 20
-NUM_MOVIES = 1000
-NUM_VISUALIZATIONS = 200000
+NUM_MOVIES = 100000
+NUM_VISUALIZATIONS = 2000000
 
 # Conexión a la base de datos
 try:
