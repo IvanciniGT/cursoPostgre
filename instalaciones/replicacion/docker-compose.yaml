@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+
+  maestro:
+    image:               postgres:16.3
+    container_name:      maestro
+    restart:             always
+    environment:
+        POSTGRES_USER:     usuario
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB:       db
+    volumes:
+        - /home/ubuntu/environment/datos/maestro:/var/lib/postgresql/data
+        - /home/ubuntu/environment/datos/replica:/var/lib/postgresql/backup
+    ports:
+                      - 5432:5432
+
+  replica:
+    image:               postgres:16.3
+    container_name:      replica
+    restart:             always
+    environment:
+        POSTGRES_USER:     usuario
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB:       db
+    volumes:
+        - /home/ubuntu/environment/datos/replica:/var/lib/postgresql/data
+    ports:
+                      - 5433:5432
+
+
+  adminer:
+    image:              adminer
+    restart:            always
+    ports:
+                      - 8080:8080

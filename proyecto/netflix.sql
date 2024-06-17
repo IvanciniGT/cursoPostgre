@@ -132,7 +132,9 @@ CREATE TABLE visualizaciones (
     fecha    TIMESTAMP  NOT NULL  DEFAULT CURRENT_TIMESTAMP
 
 ) PARTITION BY RANGE (fecha);
-
+-- Cada fila me ocupa 40 bytes
+-- Una fila vacía ocupada 24
+-- 4, 4, 8 = 16 + 24 = 40
 ALTER TABLE visualizaciones ADD CONSTRAINT visualizaciones_usuario_pelicula_fecha_uq 
     PRIMARY KEY (fecha, usuario, pelicula) USING INDEX TABLESPACE indices;
 -- Order de las columnas en el PRIMARY KEY... No es irrelevante... Al contrario... es bien importante
@@ -144,6 +146,10 @@ ALTER TABLE visualizaciones ADD CONSTRAINT visualizaciones_usuario_pelicula_fech
 -- Dado que va a ser la tabla más grande con diferencia, si se plantease la necesidad de hacer búsquedas en ella
 -- por otros campos: USUARIO: Dame las peliculas que ya ha visto este usuario
 --  DEBERIAMOS plantear el crear un índice para esa columna
+
+DROP INDEX visualizaciones_usuario_idx;
+CREATE INDEX visualizaciones_usuario_idx ON visualizaciones_2024 USING hash (usuario) TABLESPACE indices;
+
     
     
 ALTER TABLE visualizaciones ADD CONSTRAINT visualizaciones_usuario_fk                FOREIGN KEY (usuario)  REFERENCES usuarios (id);
