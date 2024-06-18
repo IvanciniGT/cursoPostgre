@@ -13,6 +13,8 @@ services:
     volumes:
         - /home/ubuntu/environment/datos/maestro:/var/lib/postgresql/data
         - /home/ubuntu/environment/datos/replica:/var/lib/postgresql/backup
+        - /home/ubuntu/environment/curso/instalaciones/replicacion/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+        - /home/ubuntu/environment/curso/instalaciones/replicacion/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
     ports:
                       - 5432:5432
 
