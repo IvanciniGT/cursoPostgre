@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+
+
+  adminer:
+    image:              adminer
+    restart:            always
+    ports:
+                      - 8080:8080
+
+# docker compose up CREAR Y ARRANCAR TODO
+#                down PARA Y BORRA TODO

@@ -7,8 +7,24 @@ Instalación Postgres - 2       Postgres15
     Crear BBDD (netflix)
     Cargar datos
 ---
-
-
+REPLICACION:
+- He de configurar la BBDD para que trabaje en modo replciacion:
+    wal_level = replica
+    max_wal_senders = 10
+    max_replication_slots = 10
+    hot_standby = on            # Si la replica la quiero disponible para consultas
+    hot_standby_feedback = on   # Si queremos que las replicas manden información de vuelta al 
+    synchronous_commit = on
+    synchronous_standby_names   # Las replicas que deben dar el ok, para la transacción
+- Crear usuario replciacion
+- Crear un slot de replciacion
+- pg_hba.conf
+    AUTENTICACION usuario de replciacion (LO TRABAJO CON LA IP EXACTA DEL OTRO)
+- Reinicio al maestro
+- BACKUP FISICO .. pero especial... backup para replicacion de un slot
+- Paro servicio
+- Ese backup me lo llevo al otro servidor
+- Arranco y disfruto!
 
 ---
 
@@ -97,3 +113,18 @@ sudo apt -y install postgresql-15
     var/    datos (archivos que cambian) log, ficheros de la BBDD
     opt/    < programas
     usr/
+    
+    
+---
+Antes de tocar los archivos de configuración,
+CREO UN REPO DE GIT... no backups.
+Con backups solo tengo el ultimo... o genero 17 backups y tengo 7 ficheros.. que estoy igual de perdido
+Si trabajo con git, tengo todas las versiones que voy cambiando y veo las diferencias entre cualuqiera de ellas... y 
+restauro la que quiera cómodamemnte
+
+
+BACKUP ---> /var/lib/postgresql/15/main/
+
+/etc/postgresql/15/main
+    ENLACE SIMBOLICOS *.conf ---> /var/lib/postgresql/15/main/
+
