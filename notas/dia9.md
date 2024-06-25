@@ -203,3 +203,5 @@ sudo -i -u postgres psql -h 172.31.27.172 -c "SELECT 1;"
 
 Ahora... Hay que hacer cambios en Modelo de datos:
 Por suerte CITUS nos regala algunos procedimientos para que se hagan en automático.
+
+
