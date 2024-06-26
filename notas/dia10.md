@@ -296,6 +296,7 @@ Aplicar la configuración:
 restart postgres
 pg_reload_conf();
 
+-- Uso de cache por parte de las queries
 SELECT
     query,
     shared_blks_hit,
@@ -312,7 +313,7 @@ ORDER BY
     (shared_blks_hit + shared_blks_read + shared_blks_dirtied + shared_blks_written) DESC
 LIMIT 10
 
-
+-- Queries que tardan más y ejecutas mas veces
 SELECT
     query,
     calls,
@@ -324,3 +325,29 @@ FROM
 ORDER BY
     calls DESC
 LIMIT 10;
+
+
+pg_badger... pero trabaja con los ficheros de log.
+Hay que ir volcando la información de las queries a achivo.
+
+--
+
+PG_AUDIT
+
+sudo apt install postgresql-16-pgaudit
+Darlo de alta como extension en postgresql.conf
+
+CREATE EXTENSION IF NOT EXISTS pgaudit;
+
+logging_collector = on
+log_directory = 'log'			# directory where log files are written,
+log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log'	# log file name pattern,
+log_file_mode = 0600			# creation mode for log files,
+log_rotation_age = 1d			# Automatic rotation of logfiles will
+log_rotation_size = 10MB		# Automatic rotation of logfiles will
+
+
+
+En los log se guardaría las entradas con la palabra AUDIT
+
+PgAdmin
