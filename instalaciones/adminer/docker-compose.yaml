@@ -9,5 +9,10 @@ services:
     ports:
                       - 8080:8080
 
-# docker compose up CREAR Y ARRANCAR TODO
-#                down PARA Y BORRA TODO
+  pghero:
+    image:              ankane/pghero
+    restart:            always
+    ports:
+                      - 8081:8080
+    environment:
+      DATABASE_URL: postgres://postgres:Pa$$w0rd@172.31.39.41:5432/postgres

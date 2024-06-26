@@ -158,9 +158,22 @@ tiempos de respuesta que no son aceptables... o que deseamos mejorar.
             - Han subido
                 - No Los necesito: me los llevo a un datalake
                 - Si los necesito: PARTICIONADO DE DATOS FECHAS...
+                - Escalado Vertical (MAS RAM, MAS CPU)
             - No han subido en valor absoluto
                 - Fragmentación -> MEMORIA / DISCO
+                - ESTADISTICAS (NUNCA REACTIVO). Planfinicado y realizandose con cierta periodicidad
+                - INDICES      (NUNCA REACTIVO)
         - Mirar el crecimiento de las tablas EN BYTES
+            - Fragmentación
+                - Necesitamos leer más páginas (vamos a tener páginas con trozos grandes vacios):
+                    - HDD (IO)
+                    - RAM (Cache)
+                En el entorno de prod... acabaremos con un volumen de datos más o menos constante.. o si acaso a más!
+                Raro es a menos!
+                    VACUUM periodicos
+                    De vez en cuando necesite tirar de VACUUM FULL !
+                    ETL 1 vez al mes... que saco un 10% de los datos... VACUUM FULL
+                 
     
 - Problemas con queries u operaciones puntuales en la BBDD
     - QUERIES: Necesito identificar la query y mirar el plan de ejecución EXPLAIN ANALIZE
@@ -237,3 +250,77 @@ tiempos de respuesta que no son aceptables... o que deseamos mejorar.
     MONITORIZAR CONEXIONES: REPLICA o bajar conexiones
     Si no se corresponde el uso disparado en un momento de CPU/RAM con un pico de conexiones,
         MIRAR Queries que se hayan ejecutado en ese momento: Llegado 4 de BI a tirar sus queries
+
+
+---
+
+Necesitamos monitorizar:
+- Recursos: CPU, MEMORIA, RED, Presión disco
+- Métricas muy concretas del Postgres
+    Número de conexiones
+- Realizar un registro exhaustivo de los queries, ops. mnto.
+  No lo activo de serie . Lo activo cuando tengo problemas ... penaliza en rendimiento!
+
+---
+
+Parámetros para monitorización de las queries:
+
+log_statement = 'all'
+                'none'
+                'ddl'
+                'mod' Incluyen ddl
+
+log_min_duration_statement = 0 Tiempo mínimo que debe tardar una query para ser guardada en el log_min_duration_statement
+Es peligroso porque me interesa guardar 2 tipos de queries: 
+- Las que tardan mucho
+- Las que tardan algo... peo se ejecutan mucho!
+
+log_duration = on -- Si quiero no solo la query sino también la duración... lo que tarda!
+
+Postgres por defecto no tiene nada para analizar esas queries que ha registrado.
+Si hay extensiones y herramientas externas que nos son de gran utilidad para esto.
+
+# pg_stat_statements
+
+Para usarla necesitamos hacer varias cosas:
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+Crea tablas dentro de la bbdd para ir almacenando la información.
+
+Lo siguiente solicitar que al iniciarse postgres, esa libreria se active... arranque para monitoriza:
+Lo hacemos tocando el postgresql.conf
+shared_preload_libraries = 'pg_stat_statements';
+pg_stat_statements.max = 10000
+pg_stat_statements.track = none, all, top
+
+Aplicar la configuración:
+restart postgres
+pg_reload_conf();
+
+SELECT
+    query,
+    shared_blks_hit,
+    shared_blks_read,
+    shared_blks_dirtied,
+    shared_blks_written,
+    local_blks_hit,
+    local_blks_read,
+    local_blks_dirtied,
+    local_blks_written
+FROM
+    pg_stat_statements
+ORDER BY
+    (shared_blks_hit + shared_blks_read + shared_blks_dirtied + shared_blks_written) DESC
+LIMIT 10
+
+
+SELECT
+    query,
+    calls,
+    exec_total_time,
+    exec_mean_time,
+    rows
+FROM
+    pg_stat_statements
+ORDER BY
+    calls DESC
+LIMIT 10;
